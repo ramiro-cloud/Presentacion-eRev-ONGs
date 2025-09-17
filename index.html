@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eRev - Deck Interactivo para Clubes</title>
+    <title>eRev - Deck Interactivo para Fundaciones y ONGs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,6 +103,15 @@
             }
         }
         /* --- End Background Animation Styles --- */
+        
+        /* --- Card Hover Effect (Slide 2) --- */
+        .card-hover-effect {
+            transition: all 0.3s ease-out;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-8px) perspective(1000px) rotateX(5deg) rotateY(-3deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
         
         /* --- Feature Stack Styles (Slide 5) --- */
         #feature-display-area {
@@ -242,19 +251,57 @@
         }
        
         @media (max-width: 768px) {
-            body { overflow: auto; }
+            body { 
+                overflow-y: auto; /* Enable scrolling on mobile */
+            }
+            #slide-container {
+                height: auto;
+            }
             .slide {
+                /* Convert slides into stackable sections for mobile */
                 height: auto;
                 min-height: 100vh;
-                padding: 4rem 1rem 6rem 1rem;
+                padding: 6rem 1rem 6rem 1rem;
                 justify-content: flex-start;
-                position: relative;
+                position: relative; /* Change from absolute to relative */
+                transform: none;
+                opacity: 1;
+                pointer-events: auto;
+                display: flex; /* Ensure it's always flex */
             }
             .nav-arrow { width: 40px; height: 40px; }
             #prevBtn { left: 0.5rem; }
             #nextBtn { right: 0.5rem; }
             .progress-dots { bottom: 10px; }
-            .decorative-shape, .footer-arc { display: none; }
+            .decorative-shape, .footer-arc, .animated-bg { display: none; } /* Hide complex backgrounds on mobile */
+            
+            /* Responsive typography */
+            h2 {
+                font-size: 2.25rem; /* Equivalent to text-4xl */
+                line-height: 2.5rem;
+            }
+            p {
+                font-size: 1rem; /* Equivalent to text-base */
+            }
+
+            /* Adjust feature stack for mobile */
+            #feature-display-area {
+                perspective: none;
+                min-height: auto;
+                margin-top: 2rem;
+            }
+            .stacked-card {
+                position: relative;
+                transform: none !important; /* Remove 3D transforms */
+                opacity: 1 !important;
+                display: none; /* Hide all cards by default */
+            }
+            .stacked-card.mobile-active {
+                display: block; /* Only show the active one */
+            }
+            .grid { /* Ensure grids stack properly */
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -267,13 +314,13 @@
              <div class="text-center relative z-10">
                  <img src="Logo eRev.png" alt="Logo de eRev" class="mx-auto h-12 mb-6" onerror="this.onerror=null;this.src='https://placehold.co/200x50/ffffff/2a7a9f?text=eRev+Logo';">
                  <h2 class="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
-                     Potenciando la <span class="erev-blue">Gestión de tu Club</span>
+                    Potenciando el Impacto de <span class="erev-blue">tu Causa</span>
                  </h2>
                  <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-                     Con eRev, la administración de tu club se vuelve <span class="font-semibold text-gray-800">simple y centralizada</span>. Nuestra plataforma <span class="font-semibold erev-blue">automatiza y optimiza</span> tus procesos para que te enfoques en <span class="font-semibold text-gray-800">brindar la mejor experiencia a tus socios.</span>
+                    Con eRev, la gestión de tu fundación u ONG se transforma en algo <span class="font-semibold text-gray-800">fluido y sin esfuerzo</span>. Nuestra plataforma <span class="font-semibold erev-blue">automatiza y simplifica</span> tus tareas, permitiéndote enfocarte en lo que <span class="font-semibold text-gray-800">de verdad importa.</span>
                  </p>
                   <a href="#" id="startBtn" class="mt-10 inline-block btn-gradient text-white font-semibold px-8 py-3 rounded-lg text-lg">
-                     Moderniza. Organiza. Crece.
+                     Organiza. Impacta. Crece.
                  </a>
              </div>
         </section>
@@ -282,20 +329,21 @@
         <section class="slide">
             <div class="footer-arc"></div>
             <div class="container mx-auto px-4 md:px-6 text-center relative z-10">
-                 <h2 class="text-3xl md:text-4xl font-bold">¡Enfócate en tus Socios, no en el Papeleo!</h2>
-                 <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto mb-12">Simplifica la gestión de tu club con beneficios pensados para vos:</p>
+                 <h2 class="text-3xl md:text-4xl font-bold">¡Libera a tu equipo!</h2>
+                 <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto mb-8">En lugar de perder tiempo en papeleo, enfócate en lo que realmente importa: las personas.</p>
+                 <h3 class="text-xl font-semibold mb-12 text-gray-800">¡Simplifica la gestión de tu organización con estos beneficios!</h3>
                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-center">
-                      <div class="bg-white p-6 rounded-xl border shadow-sm animated-card hover:scale-105 hover:shadow-xl transition-all duration-300" style="animation-delay: 0.1s;">
-                         <h3 class="text-xl font-semibold mb-2">💳 Cobro de Cuotas Simplificado</h3><p class="text-gray-600 text-sm">Automatiza el cobro de cuotas sociales y actividades. Controla la morosidad y facilita los pagos a tus socios con múltiples opciones online.</p>
+                      <div class="bg-white p-6 rounded-xl border-t-4 border-blue-200 shadow-sm animated-card card-hover-effect" style="animation-delay: 0.1s;">
+                         <h3 class="text-xl font-semibold mb-2">💰 Gestión de Donaciones Simplificada</h3><p class="text-gray-600 text-sm">Automatiza la conciliación, realiza seguimientos claros de los aportes y centraliza la comunicación para una gestión de fondos sin estrés.</p>
                      </div>
-                     <div class="bg-white p-6 rounded-xl border shadow-sm animated-card hover:scale-105 hover:shadow-xl transition-all duration-300" style="animation-delay: 0.2s;">
-                         <h3 class="text-xl font-semibold mb-2">🚀 Matrículas e Inscripciones Ágiles</h3><p class="text-gray-600 text-sm">Gestiona altas de socios, inscripciones a actividades y matrículas de forma digital, eliminando el papeleo y los errores manuales.</p>
+                     <div class="bg-white p-6 rounded-xl border-t-4 border-blue-200 shadow-sm animated-card card-hover-effect" style="animation-delay: 0.2s;">
+                         <h3 class="text-xl font-semibold mb-2">📅 Registro de Voluntarios y Socios</h3><p class="text-gray-600 text-sm">Transforma los procesos de inscripción manuales en una experiencia digital fluida y precisa para tu equipo y los nuevos miembros.</p>
                      </div>
-                     <div class="bg-white p-6 rounded-xl border shadow-sm animated-card hover:scale-105 hover:shadow-xl transition-all duration-300" style="animation-delay: 0.3s;">
-                         <h3 class="text-xl font-semibold mb-2">📊 Control Financiero Total</h3><p class="text-gray-600 text-sm">Accede a informes claros sobre ingresos, egresos y estado de cuentas de socios para tomar decisiones financieras inteligentes.</p>
+                     <div class="bg-white p-6 rounded-xl border-t-4 border-blue-200 shadow-sm animated-card card-hover-effect" style="animation-delay: 0.3s;">
+                         <h3 class="text-xl font-semibold mb-2">📊 Reportes de Impacto</h3><p class="text-gray-600 text-sm">Accede a datos claros y actualizados al instante para tomar decisiones informadas y estratégicas que impulsen el impacto de tu organización.</p>
                      </div>
-                     <div class="bg-white p-6 rounded-xl border shadow-sm animated-card hover:scale-105 hover:shadow-xl transition-all duration-300" style="animation-delay: 0.4s;">
-                          <h3 class="text-xl font-semibold mb-2">👥 Base de Socios Unificada</h3><p class="text-gray-600 text-sm">Mantén el padrón de socios siempre actualizado y segmentado. Gestiona altas, bajas y cambios de categoría de forma ágil y segura.</p>
+                     <div class="bg-white p-6 rounded-xl border-t-4 border-blue-200 shadow-sm animated-card card-hover-effect" style="animation-delay: 0.4s;">
+                          <h3 class="text-xl font-semibold mb-2">📂 Información Unificada y Segura</h3><p class="text-gray-600 text-sm">Olvida las planillas y los documentos sueltos. Centraliza la información de tus socios, donantes y voluntarios en una única plataforma.</p>
                      </div>
                  </div>
             </div>
@@ -327,12 +375,12 @@
              <div class="decorative-shape" style="bottom: 10%; left: 5%; width: 120px; height: 120px; background-color: rgba(42, 122, 159, 0.2); border-radius: 50%; animation-duration: 9s;"></div>
             <div class="container mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-16 items-center max-w-6xl relative z-10">
                 <div class="md:col-span-2 text-center">
-                    <div class="text-8xl md:text-9xl erev-blue">💸</div>
+                    <div class="text-8xl md:text-9xl erev-blue">🙌</div>
                 </div>
                 <div class="md:col-span-3 text-left">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Cobro de Cuotas <span class="erev-blue">sin Complicaciones</span></h2>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Gestión de Aportes <span class="erev-blue">sin Esfuerzo</span></h2>
                     <p class="mt-6 text-lg text-gray-600 leading-relaxed border-l-4 border-erev-blue pl-4 md:pl-6 bg-gray-50 py-4 rounded-r-lg">
-                        Cada pago de un socio <b class="erev-blue">se imputa al instante</b> en su cuenta y <b class="erev-blue">se refleja en la contabilidad</b> del club, minimizando errores y optimizando tu tiempo. El <b class="erev-blue">recibo se genera y envía automáticamente</b>, brindando tranquilidad a tu gestión.
+                        Cada donación o aporte de tus socios <b class="erev-blue">se registra al instante</b> en sus perfiles y <b class="erev-blue">se refleja automáticamente</b> en tu contabilidad, <b class="text-gray-800">minimizando errores</b> y <b class="text-gray-800">optimizando tu tiempo</b>. Además, el <b class="erev-blue">recibo se genera de forma automática</b>. Todo esto te da más precisión y tranquilidad.
                     </p>
                 </div>
             </div>
@@ -342,10 +390,10 @@
         <section class="slide">
              <div class="container mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                 <div class="text-center md:text-left">
-                    <h2 class="text-3xl md:text-4xl font-bold">La plataforma que <span class="erev-blue">tu club merece</span>.</h2>
-                    <p class="mt-6 text-lg text-gray-600">Con eRev, obtienes un socio tecnológico. Trabajamos a tu lado para automatizar y simplificar la gestión, ayudándote a ahorrar tiempo y a profesionalizar la administración de tu club.</p>
-                    <div class="mt-8 bg-green-50 border-l-4 border-erev-green p-6 rounded-r-lg shadow-sm">
-                        <p class="text-xl font-semibold text-gray-800">Nuestro concepto: <span class="erev-green">"easy-solutions"</span>.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold">La plataforma que <span class="erev-blue">tu causa merece</span>.</h2>
+                    <p class="mt-6 text-lg text-gray-600">En eRev, no solo obtienes una plataforma, sino un equipo. Trabajamos juntos con vos para automatizar y simplificar las tareas, ayudándote a ahorrar tiempo, trabajo y recursos valiosos.</p>
+                    <div class="mt-8 bg-blue-50 border-l-4 border-erev-blue p-6 rounded-r-lg shadow-sm">
+                        <p class="text-xl font-semibold text-gray-800">Nuestro concepto: <span class="erev-blue">"easy-solutions"</span>.</p>
                     </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-lg p-2 border-2 border-blue-200">
@@ -367,8 +415,8 @@
             </div>
             <div class="container mx-auto px-4 md:px-6 w-full max-w-6xl relative z-10">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold">Un <span class="erev-blue">aliado</span> en cada área de tu club.</h2>
-                    <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Explora nuestras funcionalidades y descubre cómo podemos potenciar tu gestión.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold">Un <span class="erev-blue">integrante más</span> de tu equipo.</h2>
+                    <p class="mt-4 text-gray-600 max-w-3xl mx-auto">eRev trabaja a tu lado para centralizar y simplificar la gestión. Descubre cómo te ayudamos a potenciar cada área.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 md:items-center">
                     <div class="md:col-span-1 space-y-3" id="features-list">
@@ -388,23 +436,23 @@
             <div class="footer-arc"></div>
             <div class="container mx-auto px-4 md:px-6 w-full max-w-5xl text-center relative z-10">
                  <div class="mb-10">
-                      <h2 class="text-3xl md:text-4xl font-bold">Transforma la <span class="erev-blue">gestión</span>, potencia el <span class="erev-green">deporte</span>.</h2>
+                      <h2 class="text-3xl md:text-4xl font-bold">Un <span class="erev-blue">aliado</span> para el crecimiento de tu causa</h2>
                       <p class="mt-6 text-base md:text-lg text-gray-500 leading-relaxed max-w-4xl mx-auto">
-                          ¿La administración te quita tiempo para enfocarte en lo deportivo? ¿El seguimiento de cuotas es un dolor de cabeza? ¿La comunicación con los socios es dispersa?
+                        ¿Tu equipo invierte más tiempo en tareas manuales que en la estrategia? ¿Los errores en el seguimiento de donaciones te quitan la tranquilidad? ¿Te gustaría mejorar la comunicación con tu comunidad de colaboradores y tener la información a mano cuando la necesitas?
                       </p>
                  </div>
                  <div class="bg-white rounded-xl border shadow-lg w-full p-6 md:p-8 text-left">
-                     <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-6">Con eRev, convierte los desafíos en resultados:</h3>
+                     <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-6">Con eRev, transforma los desafíos en resultados tangibles:</h3>
                      <div class="space-y-4 mb-8 text-gray-700">
-                         <p><b><span class="erev-blue">Más tiempo para el club:</span></b> Automatiza tareas y gana hasta un <b>80% de tiempo administrativo</b> para dedicar a socios y actividades.</p>
-                         <p><b><span class="erev-blue">Tesorería saludable:</span></b> Reduce hasta un <b>75% la morosidad</b> con un sistema de cobro y seguimiento eficaz.</p>
-                         <p><b><span class="erev-blue">Comunicación efectiva:</span></b> Centraliza los comunicados y noticias, fortaleciendo el sentido de pertenencia.</p>
-                         <p><b><span class="erev-blue">Control total:</span></b> Accede a toda la información de tu club desde una única plataforma, estés donde estés.</p>
+                        <p><b><span class="erev-blue">Eficiencia en el tiempo:</span></b> Dejarás atrás los procesos lentos y manuales. Con la automatización de tareas, ganarás hasta un <b>80% más de tiempo.</b></p>
+                        <p><b><span class="erev-blue">Finanzas saludables:</span></b> Optimiza el registro de aportes y logra una mayor recurrencia de donaciones gracias a un seguimiento eficaz.</p>
+                        <p><b><span class="erev-blue">Comunidad unida:</span></b> Fortalece el vínculo con tus donantes y voluntarios con una comunicación fluida y centralizada.</p>
+                        <p><b><span class="erev-blue">Control total:</span></b> Olvídate de la información dispersa. Accede a datos precisos y en tiempo real desde una única plataforma.</p>
                      </div>
                       <div class="border-t pt-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
                          <div class="flex items-center gap-3"><div class="bg-blue-100 erev-blue rounded-full font-bold w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl">⏰</div><p><b>Ahorra Tiempo:</b> Reduce drásticamente las horas dedicadas a tareas repetitivas.</p></div>
-                         <div class="flex items-center gap-3"><div class="bg-green-100 erev-green rounded-full font-bold w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl">💰</div><p><b>Optimiza Recursos:</b> Minimiza errores y mejora tu tasa de cobranza.</p></div>
-                         <div class="flex items-center gap-3"><div class="bg-blue-100 erev-blue rounded-full font-bold w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl">❤️</div><p><b>Fideliza a tus Socios:</b> Mejora la comunicación y la satisfacción general.</p></div>
+                         <div class="flex items-center gap-3"><div class="bg-blue-100 erev-blue rounded-full font-bold w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl">💡</div><p><b>Optimiza Recursos:</b> Minimiza errores y mejora la gestión de tus fondos.</p></div>
+                         <div class="flex items-center gap-3"><div class="bg-blue-100 erev-blue rounded-full font-bold w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl">❤️</div><p><b>Fortalece tu Comunidad:</b> Mejora la comunicación y satisfacción de toda tu red de colaboradores.</p></div>
                      </div>
                  </div>
             </div>
@@ -422,16 +470,16 @@
                 <div class="line" style="left: 90%; width: 2px; animation-duration: 16s; animation-delay: -8s;"></div>
             </div>
             <div class="text-center relative z-10">
-                 <h2 class="text-3xl md:text-5xl font-bold">Lleva tu club al siguiente nivel</h2>
-                 <p class="mt-4 text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">El futuro de la gestión deportiva está a un clic de distancia.</p>
+                 <h2 class="text-3xl md:text-5xl font-bold">Lleva tu causa al siguiente nivel</h2>
+                 <p class="mt-4 text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">El futuro de la gestión de ONGs está a un clic de distancia.</p>
                  <div class="mt-12">
                      <a href="https://api.whatsapp.com/send?phone=541140887008&text=Hola!%20Quisiera%20saber%20mas%20informaci%C3%B3n" target="_blank" rel="noopener noreferrer" class="bg-white erev-blue font-bold px-8 md:px-10 py-3 md:py-4 rounded-lg hover:bg-gray-100 transition-all text-lg md:text-xl inline-block final-cta-btn">
                          Solicitar una Demo
                      </a>
                  </div>
                  <div class="mt-12 md:mt-16 pt-8 border-t border-blue-500/30 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-x-8 gap-y-4 text-sm">
-                      <p><span>📞</span> +54 9 11 4089-5500</p>
-                      <p><span>✉️</span> erev@net-do.com</p>
+                      <p><span>📞</span> +54 9 11 4088-7008</p>
+                      <p><span>✉️</span> administracion@digitaldo.tech</p>
                       <p><span>🌐</span> erev.com.ar</p>
                  </div>
                  <footer class="absolute bottom-6 text-center text-blue-300 text-xs">
@@ -461,6 +509,11 @@
             const dotsContainer = document.getElementById('progress-dots-container');
             let isAnimating = false;
 
+            const isMobile = () => window.innerWidth <= 768;
+
+            // Add IDs to slides for scrolling
+            slides.forEach((slide, i) => slide.id = `slide-${i}`);
+
             for (let i = 0; i < totalSlides; i++) {
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
@@ -468,7 +521,7 @@
                 dotsContainer.appendChild(dot);
             }
             const dots = document.querySelectorAll('.dot');
-           
+            
             function updateNav() {
                  dots.forEach((dot, i) => {
                      dot.classList.toggle('active', i === currentSlide);
@@ -477,45 +530,48 @@
                  nextBtn.style.display = currentSlide === totalSlides - 1 ? 'none' : 'flex';
             }
 
-            // --- New goToSlide Function ---
             function goToSlide(index) {
-                if (isAnimating || index === currentSlide || index < 0 || index >= totalSlides) return;
+                if (isAnimating || index === currentSlide) return;
                 isAnimating = true;
 
+                if (isMobile()) {
+                    // On mobile, scroll to the section
+                    const newSlide = document.getElementById(`slide-${index}`);
+                    if (newSlide) {
+                        newSlide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    currentSlide = index;
+                    updateNav();
+                    isAnimating = false;
+                    return;
+                }
+
+                // --- Desktop animation logic ---
                 const oldSlide = slides[currentSlide];
                 const newSlide = slides[index];
                 
-                // Animate out the old slide
                 oldSlide.classList.remove('active');
                 oldSlide.classList.add('exiting');
-                
-                // Animate in the new slide
-                newSlide.classList.add('active');
 
-                // Update the current slide index and navigation
-                currentSlide = index;
-                updateNav();
-
-                // After the transition, clean up classes and unlock animations
                 setTimeout(() => {
                     oldSlide.classList.remove('exiting');
+                    newSlide.classList.add('active');
+                    currentSlide = index;
+                    updateNav();
                     isAnimating = false;
-                }, 500); // This duration must match the CSS transition duration
+                }, 500); // Match CSS transition duration
             }
-            // --- End of New goToSlide Function ---
 
-            function nextSlide() { goToSlide(currentSlide + 1); }
-            function prevSlide() { goToSlide(currentSlide - 1); }
-           
-            if(startBtn) {
-                startBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    nextSlide();
-                });
-            }
+            function nextSlide() { if(currentSlide < totalSlides - 1) goToSlide(currentSlide + 1); }
+            function prevSlide() { if(currentSlide > 0) goToSlide(currentSlide - 1); }
+            
+            startBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                goToSlide(1);
+            });
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
-           
+            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'ArrowRight') nextSlide();
                 if (e.key === 'ArrowLeft') prevSlide();
@@ -523,27 +579,36 @@
 
             updateNav();
 
-            // --- Features Section Logic (REWRITTEN for Stacked Cards) ---
             const features = [
                 {
-                    icon: '💳', title: 'Gestión de Cuotas Sociales',
-                    description: 'Automatiza la generación y el envío de cuotas. Ofrece múltiples medios de pago online y controla el estado de cuenta de cada socio en tiempo real.'
+                    icon: '⚡',
+                    title: 'Gestión de Donaciones y Aportes',
+                    description: 'Genera y envía recibos de donación masivamente sin esfuerzo, automatizando todo el ciclo de aportes para minimizar errores.'
                 },
                 {
-                    icon: '💰', title: 'Múltiples Medios de Pago',
-                    description: 'Ofrece a los socios y responsables de pago una amplia variedad de opciones para abonar online, facilitando el proceso y mejorando la experiencia.'
+                    icon: '💳',
+                    title: 'Múltiples Medios de Pago',
+                    description: 'Ofrece a los donantes y colaboradores una amplia variedad de opciones para aportar online, facilitando el proceso y mejorando la experiencia.'
                 },
                 {
-                    icon: '👥', title: 'Padrón de Socios Digital',
-                    description: 'Mantén una base de datos única y actualizada de todos los socios. Administra categorías, grupos familiares y datos de contacto de forma segura.'
+                    icon: '🔍',
+                    title: 'Seguimiento en Tiempo Real',
+                    description: 'Visualiza el historial de aportes de cada colaborador al instante, con información actualizada para una toma de decisiones rápida y eficaz.'
                 },
                 {
-                    icon: '💬', title: 'Comunicación Centralizada',
-                    description: 'Envía noticias, notificaciones importantes y comunicados a todos los socios o a grupos específicos a través de una única plataforma.'
+                    icon: '💻',
+                    title: 'Acceso Universal',
+                    description: 'Gestiona tu organización desde cualquier dispositivo y lugar del mundo. Nuestra plataforma en la nube te brinda total flexibilidad y seguridad.'
                 },
                 {
-                    icon: '📊', title: 'Informes de Gestión',
-                    description: 'Obtén reportes financieros, de ocupación de espacios y de estado de socios para tomar decisiones estratégicas que impulsen el crecimiento del club.'
+                    icon: '💬',
+                    title: 'Comunicación Directa',
+                    description: 'Centraliza y agiliza la comunicación con tu comunidad de socios y voluntarios. Envía notificaciones y mensajes de forma directa e inmediata.'
+                },
+                {
+                    icon: '📈',
+                    title: 'Informes de Impacto',
+                    description: 'Toma decisiones estratégicas basadas en datos. Accede a reportes y estadísticas claras sobre el impacto y alcance de tu organización.'
                 }
             ];
 
@@ -562,6 +627,7 @@
 
                     // Create the corresponding card for the stack
                     const card = document.createElement('div');
+                    card.dataset.index = index;
                     card.className = 'stacked-card';
                     card.innerHTML = `
                         <h3 class="text-2xl font-bold mb-4 flex items-center gap-3"><span class="text-3xl">${feature.icon}</span> ${feature.title}</h3>
@@ -579,36 +645,37 @@
                         btn.classList.toggle('erev-blue', i === selectedIndex);
                     });
 
-                    // Update the card stack
+                    // --- Mobile Logic ---
+                    if (isMobile()) {
+                        stackedCards.forEach((card, i) => {
+                            card.classList.toggle('mobile-active', i === selectedIndex);
+                        });
+                        return;
+                    }
+
+                    // --- Desktop Stack Logic ---
                     stackedCards.forEach((card, i) => {
                         const offset = i - selectedIndex;
                         const absOffset = Math.abs(offset);
 
                         // Define transformations for cards behind the active one
-                        const translateY = absOffset * 20;
                         const scale = 1 - absOffset * 0.05;
-                        const opacity = offset === 0 ? '1' : '0'; // Only show the active card's content clearly initially
-
-                        card.style.transform = `translateY(${translateY}px) scale(${scale})`;
+                        const translateY = offset * 20;
+                        const translateZ = -absOffset * 80;
+                        
+                        card.style.transform = `translateY(${translateY}px) translateZ(${translateZ}px) scale(${scale})`;
+                        card.style.opacity = (offset === 0) ? '1' : (absOffset <= 2 ? '0.5' : '0');
                         card.style.zIndex = features.length - absOffset;
-                        card.style.opacity = offset === 0 ? '1' : '0.5';
-                        card.style.pointerEvents = offset === 0 ? 'auto' : 'none';
-
-                        // Instantly hide cards that are too far back to prevent visual glitches
-                        if (absOffset > 2) {
-                            card.style.opacity = '0';
-                        }
+                        card.style.pointerEvents = (offset === 0) ? 'auto' : 'none';
                     });
                 }
-               
+                
                 if(features.length > 0) {
-                     selectFeature(0);
+                    selectFeature(0);
                 }
             }
         });
     </script>
 </body>
 </html>
-
-
 
